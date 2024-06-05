@@ -1,0 +1,22 @@
+PODS:
+  - Flutter (1.0.0)
+  - healthkit_plugin (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - healthkit_plugin (from `.symlinks/plugins/healthkit_plugin/ios`)
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  healthkit_plugin:
+    :path: ".symlinks/plugins/healthkit_plugin/ios"
+
+SPEC CHECKSUMS:
+  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  healthkit_plugin: 52e417d7d7262b33c9b1b0766ee56af200218819
+
+PODFILE CHECKSUM: 978dd492a93a8ef4ec2dc2b3631de447af34068a
+
+COCOAPODS: 1.15.2

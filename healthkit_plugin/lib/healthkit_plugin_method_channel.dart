@@ -14,4 +14,21 @@ class MethodChannelHealthkitPlugin extends HealthkitPluginPlatform {
     final version = await methodChannel.invokeMethod<String>('getPlatformVersion');
     return version;
   }
+
+  @override
+  Future<Map<String,String>?> querySteps({required int pastDays}) async {
+    final steps = await methodChannel.invokeMethod<Map<String, String>?>('querySteps');
+    return steps;
+  }
+
+  @override
+  Future<bool?> requestAuthorization() async {
+    try {
+      final isAuthorized = await methodChannel.invokeMethod<bool?>('requestAuthorization');
+      return isAuthorized;
+    } on PlatformException catch (e) {
+      print("Failed to authorize HealthKit: '${e.message}'");
+      return false;
+    }
+  }
 }
