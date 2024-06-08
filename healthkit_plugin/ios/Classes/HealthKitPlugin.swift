@@ -11,11 +11,18 @@ public class HealthKitPlugin: NSObject, FlutterPlugin {
     }
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+        
         switch (call.method) {
         case "requestAuthorization":
             requestAuthorization(completion: result)
+        case "isHealthKitAvailable":
+            isHealthKitAvailable(completion: result)
         case "querySteps":
-            querySteps(forPast: 7, completion: result)
+            if let args = call.arguments as? [String: Any], let days = args["pastDays"] as? Int {
+                querySteps(forPast: days, completion: result)
+            } else {
+                querySteps(completion: result)
+            }
         default:
             result(FlutterMethodNotImplemented)
             break;
@@ -41,7 +48,11 @@ public class HealthKitPlugin: NSObject, FlutterPlugin {
         }
     }
     
-    func query(forMeasure measure: Measure, forPast days: Int, completion: @escaping FlutterResult) {
+    private func isHealthKitAvailable(completion: @escaping FlutterResult) {
+        completion(HKHealthStore.isHealthDataAvailable())
+    }
+    
+    private func query(forMeasure measure: Measure, forPast days: Int, completion: @escaping FlutterResult) {
         let endDate = Date.now
         let daysAgo = Calendar.current.date(byAdding: DateComponents(day: -days + 1), to: endDate)!
         let startDate = Calendar.current.startOfDay(for: daysAgo)
@@ -56,7 +67,7 @@ public class HealthKitPlugin: NSObject, FlutterPlugin {
         }
     }
     
-    func querySteps(forPast days: Int, completion: @escaping FlutterResult) {
+    private func querySteps(forPast days: Int = 7, completion: @escaping FlutterResult) {
         let endDate = Date.now
         let daysAgo = Calendar.current.date(byAdding: DateComponents(day: -days + 1), to: endDate)!
         let startDate = Calendar.current.startOfDay(for: daysAgo)
@@ -66,17 +77,21 @@ public class HealthKitPlugin: NSObject, FlutterPlugin {
             if error != nil {
                 completion(FlutterError(code: "ERROR", message: "An error has occurred.", details: error))
             } else {
-                completion(result)
+                let steps = result as! [Step]
+                let list = steps.map { sample -> [String: Any] in
+                    return sample.toJson()
+                }
+                completion(list)
             }
         }
     }
     
-    
-    func query(forMeasure measure: Measure, startDate: Date, endDate: Date, completion: @escaping ([any Metric]?, Error?) -> Void) {
+    private func query(forMeasure measure: Measure, startDate: Date, endDate: Date, completion: @escaping ([any Metric]?, Error?) -> Void) {
         guard let quantityType = HKObjectType.quantityType(forIdentifier: measure.identifier) else {
             completion(nil, nil)
             return
         }
+        
         var metrics = [any Metric]()
         let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: .strictEndDate)
         var query: HKStatisticsCollectionQuery

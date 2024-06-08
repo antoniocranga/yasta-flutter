@@ -27,11 +27,15 @@ abstract class HealthkitPluginPlatform extends PlatformInterface {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
 
-  Future<Map<String, String>?> querySteps({required int pastDays}) {
+  Future<List<Object?>> querySteps({required int pastDays}) {
     throw UnimplementedError('querySteps() has not been implemented.');
   }
 
   Future<bool?> requestAuthorization() {
     throw UnimplementedError('requestAuthorization() has not been implemented.');
+  }
+
+  Future<bool?> isHealthKitAvailable() {
+    throw UnimplementedError('isHealthKitAvailable() has not been implemented.');
   }
 }

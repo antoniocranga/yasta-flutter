@@ -5,11 +5,15 @@ class HealthkitPlugin {
     return HealthkitPluginPlatform.instance.getPlatformVersion();
   }
 
-  Future<Map<String, String>?> querySteps({required int pastDays}) {
+  Future<List<Object?>> querySteps({required int pastDays}) {
     return HealthkitPluginPlatform.instance.querySteps(pastDays: pastDays);
   }
 
   Future<bool?> requestAuthorization() {
     return HealthkitPluginPlatform.instance.requestAuthorization();
+  }
+
+  Future<bool?> isHealthKitAvailable() {
+    return HealthkitPluginPlatform.instance.isHealthKitAvailable();
   }
 }

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:healthkit_plugin/healthkit_plugin.dart';
+import 'package:yasta/src/presentation/onboarding.dart';
+
+import 'bloc/healthkit/healthkit_bloc.dart';
 
 class MainWrapper extends StatefulWidget {
   const MainWrapper({super.key});
@@ -11,16 +15,8 @@ class MainWrapper extends StatefulWidget {
 class _MainWrapperState extends State<MainWrapper> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          ElevatedButton(onPressed: () async {
-            bool? isAuthorized = await HealthkitPlugin().requestAuthorization();
-            print("Authorization status: $isAuthorized");
-          }, child: Text("Request Authorization"))
-        ],
-      )
-    );
+    return MultiBlocProvider(providers: [
+      BlocProvider(create: (context) => HealthKitBloc(HealthkitPlugin()))
+    ], child: const Onboarding());
   }
 }

@@ -17,4 +17,12 @@ struct Step: Metric, Hashable {
     var value: Double {
         Double(count)
     }
+
+    func toJson() -> [String: Any] {
+        return [
+            "id": String(id.uuidString),
+            "date": Double(date.timeIntervalSince1970 * 1000),
+            "count": Int(count)
+        ];
+    }
 }

@@ -16,8 +16,8 @@ class MethodChannelHealthkitPlugin extends HealthkitPluginPlatform {
   }
 
   @override
-  Future<Map<String,String>?> querySteps({required int pastDays}) async {
-    final steps = await methodChannel.invokeMethod<Map<String, String>?>('querySteps');
+  Future<List<Object?>> querySteps({required int pastDays}) async {
+    final steps = await methodChannel.invokeMethod<List<Object?>>('querySteps', {'pastDays': pastDays}) ?? [];
     return steps;
   }
 
@@ -27,7 +27,18 @@ class MethodChannelHealthkitPlugin extends HealthkitPluginPlatform {
       final isAuthorized = await methodChannel.invokeMethod<bool?>('requestAuthorization');
       return isAuthorized;
     } on PlatformException catch (e) {
-      print("Failed to authorize HealthKit: '${e.message}'");
+      debugPrint("Failed to authorize HealthKit: '${e.message}'");
+      return false;
+    }
+  }
+
+  @override
+  Future<bool?> isHealthKitAvailable() async {
+    try {
+      final isAvailable = await methodChannel.invokeMethod<bool?>('isHealthKitAvailable');
+      return isAvailable;
+    } on PlatformException catch (e) {
+      debugPrint("Failed to authorize HealthKit: '${e.message}'");
       return false;
     }
   }
